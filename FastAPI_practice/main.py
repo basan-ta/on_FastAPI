@@ -94,4 +94,12 @@ def update_todo(todo_id: int, update_todo: dict):
                 return {'result': todo}
     raise HTTPException(status_code=404, detail="Todo not found")
     return {"message": "Todo updated successfully"}
-    
+
+
+@app.delete('/todos/{todo_id:int}')
+def delete_todo(todo_id: int):
+    for index, todo in enumerate(todos):
+        if todo['todo_id'] == todo_id:
+            delete_todo = todos.pop(index)
+            return {'result': delete_todo}
+    raise HTTPException(status_code=404, detail="Todo not found")
