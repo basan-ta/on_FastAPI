@@ -73,7 +73,7 @@ def get_all_todos(first_n: int = None):
     return todos
 
 @app.post('/todos')
-def create_todo(todo:dict):
+def create_todo(todo: dict):
     new_todo_id = max(todo["todo_id"] for todo in todos) + 1
     
     new_todo = {
@@ -83,3 +83,15 @@ def create_todo(todo:dict):
     }
     todos.append(new_todo)
     return new_todo
+
+@app.put('/todos/{todo_id:int}')
+def update_todo(todo_id: int, update_todo: dict):
+    if todo in todos:
+        for todo in todos:
+            if todo['todo_id'] == todo_id:
+                todo['todo_name'] = update_todo['todo_name']
+                todo['todo_description'] = update_todo['todo_description']
+                return {'result': todo}
+    raise HTTPException(status_code=404, detail="Todo not found")
+    return {"message": "Todo updated successfully"}
+    
