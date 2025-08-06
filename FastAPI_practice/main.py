@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import uvicorn
 import datetime 
 
@@ -61,7 +62,7 @@ def index():
 def get_todo(todo_id:int):
     for todo in todos:
         if todo['todo_id'] == todo_id:
-            return todo 
+            return {'resulut':todo}
     
     raise HTTPException(status_code=404, detail= "Todo not found")
 
@@ -70,3 +71,15 @@ def get_all_todos(first_n: int = None):
     if first_n is not None: 
         return todos[:first_n]
     return todos
+
+@app.post('/todos')
+def create_todo(todo:dict):
+    new_todo_id = max(todo["todo_id"] for todo in todos) + 1
+    
+    new_todo = {
+        "todo_id": new_todo_id,
+        "todo_name": todo["todo_name"],
+        "todo_description": todo["todo_description"]
+    }
+    todos.append(new_todo)
+    return new_todo
