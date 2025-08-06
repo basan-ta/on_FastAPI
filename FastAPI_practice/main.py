@@ -64,3 +64,9 @@ def get_todo(todo_id:int):
             return todo 
     
     raise HTTPException(status_code=404, detail= "Todo not found")
+
+@app.get('/todos')
+def get_all_todos(first_n: int = None):
+    if first_n is not None: 
+        return todos[:first_n]
+    return todos
